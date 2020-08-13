@@ -11,7 +11,7 @@ else ifeq "$(CONFIG_COREBOOT_VERSION)" "4.12"
 	coreboot_depends := $(if $(CONFIG_PURISM_BLOBS), purism-blobs)
 else
 	$(error "$(BOARD): does not specify coreboot version under CONFIG_COREBOOT_VERSION")
-endif 
+endif
 
 #coreboot_version := git
 #coreboot_repo := https://github.com/osresearch/coreboot
@@ -61,7 +61,16 @@ coreboot_target := \
 coreboot_output := coreboot.rom
 coreboot_depend += linux initrd $(musl_dep)
 
-$(build)/$(coreboot_dir)/.configured: $(COREBOOT_IASL)
+ifeq "$(CONFIG_COREBOOT_VERSION)" "4.8.1"
+COREBOOT_TOOLCHAIN=""
+$(COREBOOT_TOOLCHAIN):
+else
+COREBOOT_TOOLCHAIN="$(build)/$(coreboot_base_dir)/.xcompile"
+$(COREBOOT_TOOLCHAIN): $(build)/$(coreboot_base_dir)/.canary
+	$(MAKE) -C "$(build)/$(coreboot_base_dir)" CPUS=`nproc` crossgcc-i386
+endif
+
+$(build)/$(coreboot_dir)/.configured: $(COREBOOT_IASL) $(COREBOOT_TOOLCHAIN)
 $(COREBOOT_IASL): $(build)/$(coreboot_base_dir)/.canary
 	$(MAKE) -C "$(build)/$(coreboot_base_dir)" CPUS=$$CPUS iasl
 
