@@ -118,9 +118,11 @@ coreboot-blobs_url := https://www.coreboot.org/releases/$(coreboot-blobs_tar)
 ifeq "$(CONFIG_COREBOOT_VERSION)" "4.8.1"
 	coreboot-blobs_tar_opt := --strip 3
 	coreboot-blobs_dir := coreboot-$(coreboot-blobs_version)/3rdparty/blobs
+	coreboot-blobs_hash := 18aa509ae3af005a05d7b1e0b0246dc640249c14fc828f5144b6fd20bb10e295
 else
 	coreboot-blobs_tar_opt := --strip 2
 	coreboot-blobs_dir := coreboot-$(coreboot-blobs_version)/3rdparty
+	coreboot-blobs_hash := 4735ee6850d55d1e65dee8b08cc9b28b8af00b42acf31365f5d9545406579104
 endif
 
 ## there is nothing to build for the blobs, this should be
